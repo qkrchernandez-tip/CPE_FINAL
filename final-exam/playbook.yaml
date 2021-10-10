@@ -1,0 +1,215 @@
+---
+  - name: Clone prelim-exam repository
+    hosts: Ubuntu
+    tasks:
+    - name: Include variables from config.yaml
+      include_vars:
+        file: config.yaml
+
+    - name: Install Git using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: git
+        service: ""
+      when: ansible_facts['os_family'] == 'Debian'
+     
+    - name: Install Git using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: git
+        service: ""
+      when: ansible_facts['os_family'] == 'Debian'
+     
+    - name:  Install ftp
+
+    tasks:
+    - name: Include variables from config.yaml
+      include_vars:
+        file: config.yaml
+
+    - name: Install ftp using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: vsftpd
+        service: ""
+      when: ansible_facts['os_family'] == 'Debian'
+    
+    - name: Configure vsftpd on Ubuntu using configurevsftpdubuntu
+      include_role:
+        name: configurevsftpdubuntu
+      when: ansible_facts['os_family'] == 'Debian'
+    
+    - name: Install and configure Nagios
+    hosts: Ubuntu
+
+    tasks:
+    - name: Include variables from config.yaml
+      include_vars:
+        file: config.yaml
+
+    - name: Install Nagios dependencies using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: ""
+        repo: ""
+        package:
+          - autoconf
+          - gcc
+          - libc6
+          - libmcrypt-dev
+          - make
+          - wget
+          - libssl-dev
+          - gawk
+          - dc
+          - build-essential
+          - snmp
+          - libnet-snmp-perl
+          - gettext
+          - unzip
+          - apache2
+          - php
+          - libapache2-mod-php7.4
+          - libgd-dev
+          - python3
+          - python3-pip
+        service: ""
+      when: ansible_distribution == "Ubuntu"
+    
+    - name: Install Nagios dependencies using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: ""
+        repo: ""
+        package:
+          - autoconf
+          - gcc
+          - libc6
+          - libmcrypt-dev
+          - make
+          - wget
+          - libssl-dev
+          - gawk
+          - dc
+          - build-essential
+          - snmp
+          - libnet-snmp-perl
+          - gettext
+          - unzip
+          - apache2
+          - php
+          - libgd-dev
+          - python3
+          - python3-pip
+          - python
+          - python-pip
+        service: ""
+      when: ansible_distribution == "Debian"
+    
+    - name: Configure Nagios using configurenagiosubuntu role
+      include_role:
+        name: configurenagiosubuntu
+      when: ansible_facts['os_family'] == 'Debian'
+    
+    - name: Install elk
+    hosts: Ubuntu
+    
+    tasks:
+    - name: Include variables from config.yaml
+      include_vars:
+        file: config.yaml
+    
+    - name: Install Docker dependencies using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: ""
+        repo: ""
+        filename: ""
+        package:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+          - python3
+          - python3-pip
+        service: ""
+      when: ansible_facts['os_family'] == 'Debian' 
+    
+    - name: Install Docker python dependencies using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: ""
+        repo: ""
+        filename: ""
+        package:
+          - python
+          - python-pip
+        service: ""
+      when: ansible_distribution == 'Debian'
+
+    - name: Install Docker using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: "https://download.docker.com/linux/ubuntu/gpg"
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+        filename: "docker-ce"
+        package:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        service: docker
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install Docker using installpackageubuntu role
+      include_role:
+        name: installpackageubuntu
+      vars:
+        url: "https://download.docker.com/linux/ubuntu/gpg"
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian buster stable"
+        filename: "docker-ce"
+        package:
+          - python-docker
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        service: docker
+      when: ansible_distribution == 'Debian'
+
+    - name: Pip install docker Python modules
+      include_role:
+        name: pipinstall
+      vars:
+        pippackage: docker
+      
+    - name: Stop firewall using stopfirewallubuntu role
+      include_role:
+        name: stopfirewallubuntu
+      when: ansible_distribution == 'Ubuntu'
+    
+    - name: Change MOTD to a new default message or defined message in config.yaml
+    hosts: Ubuntu
+
+    tasks:
+    - name: Include variables from config.yaml
+      include_vars:
+        file: config.yaml
+
+    - name: Include change motd role
+      include_role:
+        name: changemotd    
+        
